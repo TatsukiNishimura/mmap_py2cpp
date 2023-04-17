@@ -6,12 +6,21 @@
 #include <opencv2/opencv.hpp>
 #include <cv_bridge/cv_bridge.h>
 
+ros::Time start;
+
+void callback(const std_msgs::Header &msg)
+{
+    std::cout << "time[s] = " << (msg.stamp - start).toSec() << std::endl;
+}
+
 int main(int argc, char **argv)
 {
     ros::init(argc, argv, "img_writer");
     ros::NodeHandle n;
+    ros::Subscriber sub = n.subscribe("header", 10, callback);
     const char *file_name = "/root/catkin_ws/src/mmap_py2cpp/img/DSC_0568.JPG";
     cv::Mat image;
+    start = ros::Time::now();
     try
     {
         image = cv::imread(file_name);
@@ -27,7 +36,7 @@ int main(int argc, char **argv)
     }
 
     const int size = image.total() * image.elemSize();
-    printf("total : %d elemsize : %d size : %d", image.total(), image.elemSize(), size);
+    ROS_INFO("total : %d elemsize : %d size : %d", image.total(), image.elemSize(), size);
     std::vector<uint8_t> buf;
     buf.resize(size);
     SharedMemoryPool memory("/root/catkin_ws/src/mmap_py2cpp/share/shared.pool", size, 2);
@@ -37,5 +46,6 @@ int main(int argc, char **argv)
     {
         ROS_INFO("wrote %d bytes", buf.size());
     }
+    ros::spin();
     return 0;
 }

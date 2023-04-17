@@ -17,7 +17,6 @@ class SharedMemoryPool:
         except:
             file = open(self._file_path, "w+b")
         if os.path.getsize(file_path) < total_size:
-            print("zero writing")
             file.write(b'\0' * total_size)
         self._mm = mmap.mmap(file.fileno(), total_size)
         file.close()
