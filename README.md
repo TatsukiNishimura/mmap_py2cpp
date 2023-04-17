@@ -26,12 +26,12 @@ roscore
 
 4. 
 ```
-rosrun mmap_py2cpp write_node
+rosrun mmap_py2cpp receive_img_node.py 
 ```
 
 5.
 ```
-rosrun mmap_py2cpp receive_img_node.py 
+rosrun mmap_py2cpp write_node
 ```
 
 6. imgにreceive.jpgが生成される
